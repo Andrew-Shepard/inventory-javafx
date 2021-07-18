@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class App {
+    start():void
+}
+class EditItemPageController{
+}
+class Inventory{
+}
+class Item{
+    ~String name
+    ~BigDecimal value
+    ~String serial_number
+    ~int MAX_NAME_LENGTH
+
+    +setName(String name):void
+    +setValue(Long value):void
+    +setSerial_number(String serial_number):void
+    +getNameasString():String
+    +getName():SimpleStringProperty
+    +getValue():BigDecimal
+}
+class MainPageController{
+}
+class User{
+    ObservableList<Item> inventory
+}
+
+@enduml
