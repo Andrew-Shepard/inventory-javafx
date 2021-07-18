@@ -51,4 +51,16 @@ public class User {
         Item added_item = new Item(description,value,serial_number);
         inventory.set(item_index,added_item);
     }
+    public ObservableList<Item> searchByName(String search_string){
+        ObservableList<Item> filtered_list = FXCollections.observableArrayList();
+        for (Item item : inventory){
+            if (item.getNameasString().equals(search_string)){
+                filtered_list.add(item);
+            }
+        }
+        return null;
+    }
+    public ObservableList<Item> searchBySerial(){
+        return null;
+    }
 }
