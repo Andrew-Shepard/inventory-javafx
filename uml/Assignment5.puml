@@ -6,8 +6,6 @@ class App {
 }
 class EditItemPageController{
 }
-class Inventory{
-}
 class Item{
     ~String name
     ~BigDecimal value
@@ -25,6 +23,17 @@ class MainPageController{
 }
 class User{
     ObservableList<Item> inventory
+    +Comparator<Item> nameComparator
+    +Comparator<Item> valueComparator
+    +Comparator<Item> serial_numberComparator
+
+    +getInventory():ObservableList<Item>
+    +sortName():void
+    +sortValue():void
+    +sortSerial():void
+    +addItem():void
+    +removeItem():void
+    +editItem():void
 }
 
 @enduml

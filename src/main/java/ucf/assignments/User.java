@@ -37,10 +37,18 @@ public class User {
         return inventory;
     }
 
-    public void sortName(){
-        Collections.sort(inventory,nameComparator);
-    }
-
+    public void sortName(){Collections.sort(inventory,nameComparator);}
     public void sortValue(){Collections.sort(inventory,valueComparator);}
     public void sortSerial(){Collections.sort(inventory,serial_numberComparator);}
+    public void removeItem(Item item){inventory.remove(item);}
+    public void addItem(String description, Long value, String serial_number ){
+        //lists add new item with description, completion and due date
+        Item added_item = new Item(description,value,serial_number);
+        inventory.add(added_item);
+    }
+    public void editItem(Item item, String description, Long value, String serial_number ){
+        int item_index = inventory.indexOf(item);
+        Item added_item = new Item(description,value,serial_number);
+        inventory.set(item_index,added_item);
+    }
 }
