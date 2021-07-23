@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="255.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.EditItemPageController">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="128.60001220703126" minHeight="10.0" prefHeight="50.79998970031738" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="232.59997787475587" minHeight="10.0" prefHeight="134.99998168945314" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="77.40003051757813" minHeight="10.0" prefHeight="74.20001831054688" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TextField fx:id="valueTextField" GridPane.rowIndex="1" />
+      <TextField fx:id="serialTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label text="Value" GridPane.halignment="CENTER" />
+      <Label text="Serial" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+      <Label text="Name" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+      <Button fx:id="saveItemButton" mnemonicParsing="false" onAction="#SaveItem" text="Save Item [+]" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <Button fx:id="returnButton" mnemonicParsing="false" onAction="#ReturnToMainPage" text="Return" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <TextArea fx:id="nameTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+   </children>
+</GridPane>

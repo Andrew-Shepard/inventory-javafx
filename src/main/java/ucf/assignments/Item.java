@@ -11,15 +11,17 @@ import java.time.LocalDate;
  */
 public class Item {
 
-    String name;
+    String name = null;
     BigDecimal value = null;
     String serial_number = null;
     int MAX_NAME_LENGTH = 256;
 
-    public Item(String name, Long value, String serial_number) {
+    public Item(String name, Double value, String serial_number) {
+        while (name.length() < 2){
+            name.concat("*");
+        }
         int name_length = name.length() > MAX_NAME_LENGTH ? MAX_NAME_LENGTH : name.length();
-
-        this.name = new String(name.substring(2, name_length));
+        this.name = name.substring(0, name_length);
         this.value = new BigDecimal(value);
         this.serial_number = serial_number;
     }
@@ -28,7 +30,7 @@ public class Item {
         this.name = new String(name);
     }
 
-    public void setValue(Long value) {
+    public void setValue(Double value) {
         this.value = new BigDecimal(value);
     }
 
@@ -36,21 +38,14 @@ public class Item {
         this.serial_number = serial_number;
     }
 
-    public String getNameasString() {
+    public String getName() {
         return name;
-    }
-
-    public SimpleStringProperty getName() {
-        SimpleStringProperty simple_name = new SimpleStringProperty(name);
-        return simple_name;
     }
 
     public BigDecimal getValue() {
         return value;
     }
 
-    public String getSerial_number() {
-        return serial_number;
-    }
+    public String getSerial_number(){ return serial_number; }
 }
 

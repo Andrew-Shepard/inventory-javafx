@@ -23,6 +23,7 @@ class MainPageController{
 }
 class User{
     ObservableList<Item> inventory
+    +int active_item_index
     +Comparator<Item> nameComparator
     +Comparator<Item> valueComparator
     +Comparator<Item> serial_numberComparator
@@ -34,6 +35,7 @@ class User{
     +addItem():void
     +removeItem():void
     +editItem():void
+    +checkUniqueSerial():Boolean
 }
 
 @enduml

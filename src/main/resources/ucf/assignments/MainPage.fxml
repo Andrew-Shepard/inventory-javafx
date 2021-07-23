@@ -63,9 +63,9 @@
             <content>
                 <TableView fx:id="tableView" prefHeight="250.0" prefWidth="498.0">
                     <columns>
-                        <TableColumn fx:id="serialColumn" prefWidth="103.20001065731049" text="Serial" />
-                        <TableColumn fx:id="valueColumn" prefWidth="72.80005645751953" text="Completion" />
-                        <TableColumn fx:id="nameColumn" prefWidth="320.00006103515625" text="Name" />
+                        <TableColumn fx:id="valueColumn" prefWidth="98.40001982450485" text="Value" />
+                        <TableColumn fx:id="serialColumn" prefWidth="105.59998321533203" text="Serial" />
+                        <TableColumn fx:id="nameColumn" prefWidth="294.4001007080078" text="Name" />
                     </columns>
                 </TableView>
             </content>
