@@ -79,7 +79,7 @@ public class EditItemPageController implements Initializable {
         }
         //name validate
         if (nameTextArea.getText().length() <= 2
-            && nameTextArea.getText().length() <= 256){
+            || nameTextArea.getText().length() <= 256){
             nameisFormatted = Boolean.TRUE;
         } else{
             errorMessage = errorMessage + "\nName must be between 2 and 256 length";

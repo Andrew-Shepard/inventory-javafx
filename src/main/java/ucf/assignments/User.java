@@ -145,5 +145,13 @@ public class User {
         }
         return true;
     }
+    public boolean validateName(String name){
 
+    }
+    public boolean validateValue(String value){
+
+    }
+    public boolean validateSerial(String serial){
+
+    }
 }
