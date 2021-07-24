@@ -16,8 +16,8 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="128.60001220703126" minHeight="10.0" prefHeight="50.79998970031738" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="232.59997787475587" minHeight="10.0" prefHeight="134.99998168945314" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="77.40003051757813" minHeight="10.0" prefHeight="74.20001831054688" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="232.59997787475587" minHeight="10.0" prefHeight="76.40001220703122" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="129.19998779296876" minHeight="10.0" prefHeight="129.19998779296876" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <TextField fx:id="valueTextField" GridPane.rowIndex="1" />
@@ -28,5 +28,6 @@
       <Button fx:id="saveItemButton" mnemonicParsing="false" onAction="#SaveItem" text="Save Item [+]" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <Button fx:id="returnButton" mnemonicParsing="false" onAction="#ReturnToMainPage" text="Return" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <TextArea fx:id="nameTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Label fx:id="editItemErrorLabel" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
    </children>
 </GridPane>

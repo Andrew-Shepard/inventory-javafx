@@ -34,13 +34,18 @@ public class MainPageController implements Initializable {
         tableView.setItems(u.getInventory());
     }
     public void nameSortItems(ActionEvent actionEvent) {
-
+        u.sortName();
+        tableView.setItems(u.getInventory());
     }
 
     public void valueSortItems(ActionEvent actionEvent) {
+        u.sortValue();
+        tableView.setItems(u.getInventory());
     }
 
     public void serialSortItems(ActionEvent actionEvent) {
+        u.sortSerial();
+        tableView.setItems(u.getInventory());
     }
 
     public void editItem(ActionEvent actionEvent) throws IOException {
@@ -60,6 +65,12 @@ public class MainPageController implements Initializable {
 
 
     public void deleteItem(ActionEvent actionEvent) {
+        //remove an item from a todolist arraylist using user.removeitem
+        ObservableList<Item> item;
+        item = tableView.getSelectionModel().getSelectedItems();
+        u.removeItem(item.get(0));
+        //update the list of todolists to not have that item within the todolist
+        tableView.setItems(u.getInventory());
     }
 
     public void addItem(ActionEvent actionEvent) throws IOException{

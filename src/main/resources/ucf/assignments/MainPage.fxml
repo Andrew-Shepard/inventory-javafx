@@ -2,29 +2,26 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.MainPageController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.MainPageController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="128.59998168945313" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="297.6000244140625" minHeight="10.0" prefHeight="230.40001220703124" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="128.59998168945313" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="297.6000244140625" minHeight="10.0" prefHeight="250.2" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="122.19998779296878" minHeight="10.0" prefHeight="118.19998779296878" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Label text="Select Item:">
-            <GridPane.margin>
-                <Insets left="20.0" />
-            </GridPane.margin>
-        </Label>
         <Button mnemonicParsing="false" onAction="#editItem" text="[*] Edit" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets left="20.0" />
@@ -61,24 +58,44 @@
         </Label>
         <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
             <content>
-                <TableView fx:id="tableView" prefHeight="250.0" prefWidth="498.0">
+                <TableView fx:id="tableView" prefHeight="250.0" prefWidth="548.0">
                     <columns>
                         <TableColumn fx:id="valueColumn" prefWidth="98.40001982450485" text="Value" />
                         <TableColumn fx:id="serialColumn" prefWidth="105.59998321533203" text="Serial" />
-                        <TableColumn fx:id="nameColumn" prefWidth="294.4001007080078" text="Name" />
+                        <TableColumn fx:id="nameColumn" prefWidth="340.0000915527344" text="Name" />
                     </columns>
                 </TableView>
             </content>
         </ScrollPane>
         <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#load" text="Load File" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
             <GridPane.margin>
-                <Insets right="90.0" />
+                <Insets right="90.0" top="55.0" />
             </GridPane.margin>
         </Button>
         <Button fx:id="saveFileButton" mnemonicParsing="false" onAction="#save" text="Save File" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
             <GridPane.margin>
-                <Insets right="20.0" />
+                <Insets right="20.0" top="55.0" />
             </GridPane.margin>
         </Button>
+      <ComboBox fx:id="filenameCombobox" prefWidth="100.0" promptText="File Type" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets bottom="60.0" right="35.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <TextField fx:id="filenameTextField" maxWidth="135.0" promptText="Filepath w/o ext" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="20.0" />
+         </GridPane.margin>
+      </TextField>
+      <TextField fx:id="searchTextField" maxWidth="160.0">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </TextField>
+      <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchItem" text="Search">
+         <GridPane.margin>
+            <Insets left="180.0" />
+         </GridPane.margin>
+      </Button>
     </children>
 </GridPane>
