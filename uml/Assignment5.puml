@@ -5,6 +5,8 @@ class App {
     start():void
 }
 class EditItemPageController{
+-User u
+initData(User):void
 }
 class Item{
     ~String name
@@ -20,6 +22,12 @@ class Item{
     +getValue():BigDecimal
 }
 class MainPageController{
+-User u
+initData(User):void
++nameSortItems():void
++valueSortItems():void
++serialSortItems():void
+
 }
 class User{
     ObservableList<Item> inventory
@@ -35,6 +43,9 @@ class User{
     +addItem():void
     +removeItem():void
     +editItem():void
+    +validateSerial:Boolean
+    +validateValue:Boolean
+    +validateName:Boolean
     -checkUniqueSerial():Boolean
 }
 

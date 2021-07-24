@@ -78,16 +78,18 @@ public class User {
 
     public void searchByName(String search_string) {
         int match_index = 0;
+        int item_index = 0;
+        ObservableList<Item> placeholder_inventory = inventory;
         for (Item item : inventory) {
-            if (item.getName().equals(search_string)) {
+            if (item.getName().contains(search_string)) {
                 //save the index of the match to be removed
-                int item_index = inventory.indexOf(item);
+                item_index = inventory.indexOf(item);
                 //save the matched item
                 Item match_item = item;
                 //remove the place where the item was found
-                inventory.remove(item_index);
+                placeholder_inventory.remove(item_index);
                 //add the matched item to the beginning of the list
-                inventory.add(match_index, match_item);
+                placeholder_inventory.add(match_index, match_item);
                 //have further matches be added after this match
                 match_index++;
             }
@@ -96,16 +98,18 @@ public class User {
 
     public void searchBySerial(String search_string) {
         int match_index = 0;
+        int item_index = 0;
+        ObservableList<Item> placeholder_inventory = inventory;
         for (Item item : inventory) {
-            if (item.getSerial_number().equals(search_string)) {
+            if (item.getSerial_number().contains(search_string)) {
                 //save the index of the match to be removed
-                int item_index = inventory.indexOf(item);
+                item_index = inventory.indexOf(item);
                 //save the matched item
                 Item match_item = item;
                 //remove the place where the item was found
-                inventory.remove(item_index);
+                placeholder_inventory.remove(item_index);
                 //add the matched item to the beginning of the list
-                inventory.add(match_index, match_item);
+                placeholder_inventory.add(match_index, match_item);
                 //have further matches be added after this match
                 match_index++;
             }
@@ -149,8 +153,8 @@ public class User {
 
     public boolean validateName(String name) {
         //check if length is within range
-        if (name.length() <= 2
-                || name.length() <= 256) {
+        if (name.length() >= 2
+                && name.length() <= 256) {
             return true;
         }
         return false;
@@ -171,8 +175,7 @@ public class User {
         //check for length and uniqueness in existing list
         if (serialContainsSpecialCharacters == Boolean.FALSE
                 && serial.length() == 10
-                && checkUniqueSerial(serial)
-                || (serial.equals(getInventory().get(active_item_index).getSerial_number()))) {
+                && (checkUniqueSerial(serial) || (serial.equals(getInventory().get(active_item_index).getSerial_number()))) ) {
             return true;
         }
         return false;

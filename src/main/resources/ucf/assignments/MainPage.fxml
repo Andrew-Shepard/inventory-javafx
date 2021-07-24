@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.MainPageController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.MainPageController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -58,11 +58,11 @@
         </Label>
         <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
             <content>
-                <TableView fx:id="tableView" prefHeight="250.0" prefWidth="548.0">
+                <TableView fx:id="tableView" prefHeight="274.0" prefWidth="648.0">
                     <columns>
-                        <TableColumn fx:id="valueColumn" prefWidth="98.40001982450485" text="Value" />
-                        <TableColumn fx:id="serialColumn" prefWidth="105.59998321533203" text="Serial" />
-                        <TableColumn fx:id="nameColumn" prefWidth="340.0000915527344" text="Name" />
+                        <TableColumn fx:id="valueColumn" prefWidth="116.7999832034111" text="Value" />
+                        <TableColumn fx:id="serialColumn" prefWidth="152.0000228881836" text="Serial" />
+                        <TableColumn fx:id="nameColumn" prefWidth="378.3999328613281" text="Name" />
                     </columns>
                 </TableView>
             </content>
@@ -77,7 +77,7 @@
                 <Insets right="20.0" top="55.0" />
             </GridPane.margin>
         </Button>
-      <ComboBox fx:id="filenameCombobox" prefWidth="100.0" promptText="File Type" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+      <ComboBox fx:id="filenameComboBox" prefWidth="100.0" promptText="File Type" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets bottom="60.0" right="35.0" />
          </GridPane.margin>
@@ -87,15 +87,20 @@
             <Insets right="20.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="searchTextField" maxWidth="160.0">
+      <TextField fx:id="searchTextField" maxWidth="150.0" prefWidth="120.0">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
       </TextField>
       <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchItem" text="Search">
          <GridPane.margin>
-            <Insets left="180.0" />
+            <Insets left="260.0" />
          </GridPane.margin>
       </Button>
+      <ComboBox fx:id="searchComboBox" prefWidth="80.0">
+         <GridPane.margin>
+            <Insets left="172.0" />
+         </GridPane.margin>
+      </ComboBox>
     </children>
 </GridPane>

@@ -28,6 +28,6 @@
       <Button fx:id="saveItemButton" mnemonicParsing="false" onAction="#SaveItem" text="Save Item [+]" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <Button fx:id="returnButton" mnemonicParsing="false" onAction="#ReturnToMainPage" text="Return" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
       <TextArea fx:id="nameTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Label fx:id="editItemErrorLabel" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <Label fx:id="editItemErrorLabel" textFill="#e11010" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
    </children>
 </GridPane>

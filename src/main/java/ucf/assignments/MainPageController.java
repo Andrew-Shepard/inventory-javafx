@@ -1,6 +1,7 @@
 package ucf.assignments;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -26,9 +28,15 @@ public class MainPageController implements Initializable {
     @FXML private TableColumn<Item, SimpleStringProperty> serialColumn;
     @FXML private TableColumn<Item, BigDecimal> valueColumn;
     @FXML private TableColumn<Item, SimpleStringProperty> nameColumn;
-    @FXML private TextField filenameTextbox;
+    @FXML private TextField filenameTextField;
+    @FXML private TextField searchTextField;
+    @FXML private ComboBox searchComboBox;
+    @FXML private ComboBox filenameComboBox;
 
+    ObservableList<String> searchChoiceList = FXCollections.observableArrayList("Serial","Name");
+    ObservableList<String> filetypeChoiceList = FXCollections.observableArrayList("TSV","JSON","HTML");
     private User u = new User();
+
     void initData(User u){
         this.u = u;
         tableView.setItems(u.getInventory());
@@ -83,16 +91,27 @@ public class MainPageController implements Initializable {
 
     public void save(ActionEvent actionEvent) {
     }
+    public void searchItem(ActionEvent actionEvent) {
+        if (searchComboBox.getValue().equals("Serial")){ // if the combobox is set to serial
+            //search by serial and update the table
+            u.searchBySerial(searchTextField.getText());
+            tableView.setItems(u.getInventory());
+        } else if (searchComboBox.getValue().equals("Name")){ // if the combobox is set to name
+            //search by name and update the table
+            u.searchByName(searchTextField.getText());
+            tableView.setItems(u.getInventory());
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb){
         //sets up columns
         serialColumn.setCellValueFactory(new PropertyValueFactory<Item,SimpleStringProperty>("serial_number"));
         valueColumn.setCellValueFactory(new PropertyValueFactory<Item,BigDecimal>("value"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<Item,SimpleStringProperty>("name"));
-        //load data
+        //set up comboboxes
+        filenameComboBox.setItems(filetypeChoiceList);
+        searchComboBox.setItems(searchChoiceList); //Need to safely initalize this outside of this function
+        searchComboBox.setValue("Serial");
     }
 
-
-    public void searchItem(ActionEvent actionEvent) {
-    }
 }

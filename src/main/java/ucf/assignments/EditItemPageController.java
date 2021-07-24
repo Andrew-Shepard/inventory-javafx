@@ -67,7 +67,7 @@ public class EditItemPageController implements Initializable {
         }
         //name validate
         if(u.validateName(nameTextArea.getText()) == false){
-            errorMessage = errorMessage + "\nName must be between 2 and 256 length";
+            errorMessage = errorMessage + "\nName must be between 2 and 256\nlength";
             editItemErrorLabel.setText(errorMessage);
         }
         //set the value in the inventory if the input is validated
