@@ -52,48 +52,32 @@ public class EditItemPageController implements Initializable {
 
     public void SaveItem(ActionEvent actionEvent) {
         //validate input
-        Boolean valueisNumber = Boolean.TRUE;
-        Boolean nameisFormatted = Boolean.FALSE;
-        Boolean serialisFormatted = Boolean.FALSE; // Is length 10 and does not contain special characters
         String errorMessage = "Error:"; //Made so multiple errors can be thrown
         //value validate
-        try {
-            Double.parseDouble(valueTextField.getText());
-        } catch (NumberFormatException e) {
-            valueisNumber = Boolean.FALSE;
+        if(u.validateValue(valueTextField.getText()) == false){ // returns true if a number
             //throw an error if the input is not validated
             errorMessage = errorMessage + "\nValue must be a number";
             editItemErrorLabel.setText(errorMessage);
         }
-        Boolean serialContainsSpecialCharacters = Pattern.matches("[^A-Za-z0-9]", serialTextField.getText());
         //serial validate
-        if (serialContainsSpecialCharacters == Boolean.FALSE
-                && serialTextField.getText().length() == 10
-                && u.checkUniqueSerial(serialTextField.getText())
-                || (serialTextField.getText().equals(u.getInventory().get(u.active_item_index).getSerial_number()))) {
-            serialisFormatted = Boolean.TRUE;
-        } else {
+        if(u.validateSerial(serialTextField.getText()) == false){
             //throw an error if the input is not validated
             errorMessage = errorMessage + "\nSerial must be alphanumeric, unique\nand 10 characters";
             editItemErrorLabel.setText(errorMessage);
         }
         //name validate
-        if (nameTextArea.getText().length() <= 2
-            || nameTextArea.getText().length() <= 256){
-            nameisFormatted = Boolean.TRUE;
-        } else{
+        if(u.validateName(nameTextArea.getText()) == false){
             errorMessage = errorMessage + "\nName must be between 2 and 256 length";
             editItemErrorLabel.setText(errorMessage);
         }
         //set the value in the inventory if the input is validated
-        if (valueisNumber == Boolean.TRUE
-                && serialisFormatted == Boolean.TRUE
-                && nameisFormatted == Boolean.TRUE){
+        if (u.validateName(nameTextArea.getText()) == true
+                && u.validateValue(valueTextField.getText()) == true
+                && u.validateSerial(serialTextField.getText()) == true){
             u.getInventory().get(u.active_item_index).setValue(Double.parseDouble(valueTextField.getText()));
             u.getInventory().get(u.active_item_index).setName(nameTextArea.getText());
             u.getInventory().get(u.active_item_index).setSerial_number(serialTextField.getText());
             editItemErrorLabel.setText("");
         }
-
     }
 }

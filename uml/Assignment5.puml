@@ -35,7 +35,7 @@ class User{
     +addItem():void
     +removeItem():void
     +editItem():void
-    +checkUniqueSerial():Boolean
+    -checkUniqueSerial():Boolean
 }
 
 @enduml

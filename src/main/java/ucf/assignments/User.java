@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class User {
     ObservableList<Item> inventory = FXCollections.observableArrayList();
@@ -124,7 +125,7 @@ public class User {
         }
         String saltStr = salt.toString();
         //checks if the generated string was unique, otherwise generates another
-        if(!checkUniqueSerial(saltStr)){
+        if (!checkUniqueSerial(saltStr)) {
             generateRandomSerial();
         }
         return saltStr;
@@ -136,7 +137,7 @@ public class User {
         return item_index;
     }
 
-    public boolean checkUniqueSerial(String serial) {
+    private boolean checkUniqueSerial(String serial) {
         //iterates through the inventory and checks that the serial doesn't equal existing serials
         for (Item item : inventory) {
             if (item.getSerial_number().equals(serial)) {
@@ -145,13 +146,35 @@ public class User {
         }
         return true;
     }
-    public boolean validateName(String name){
 
+    public boolean validateName(String name) {
+        //check if length is within range
+        if (name.length() <= 2
+                || name.length() <= 256) {
+            return true;
+        }
+        return false;
     }
-    public boolean validateValue(String value){
 
+    public boolean validateValue(String value) {
+        try { // check if the string contains a valid number
+            Double.parseDouble(value);
+        } catch (NumberFormatException e) { //if it doesn't return that it doesnt
+            return false;
+        }
+        return true;
     }
-    public boolean validateSerial(String serial){
 
+    public boolean validateSerial(String serial) {
+        //check for special characters
+        Boolean serialContainsSpecialCharacters = Pattern.matches("[^A-Za-z0-9]", serial);
+        //check for length and uniqueness in existing list
+        if (serialContainsSpecialCharacters == Boolean.FALSE
+                && serial.length() == 10
+                && checkUniqueSerial(serial)
+                || (serial.equals(getInventory().get(active_item_index).getSerial_number()))) {
+            return true;
+        }
+        return false;
     }
 }
