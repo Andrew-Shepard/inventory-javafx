@@ -14,14 +14,9 @@ public class Item {
     String name = null;
     BigDecimal value = null;
     String serial_number = null;
-    int MAX_NAME_LENGTH = 256;
 
     public Item(String name, Double value, String serial_number) {
-        while (name.length() < 2){
-            name.concat("*");
-        }
-        int name_length = name.length() > MAX_NAME_LENGTH ? MAX_NAME_LENGTH : name.length();
-        this.name = name.substring(0, name_length);
+        this.name = name;
         this.value = new BigDecimal(value);
         this.serial_number = serial_number;
     }

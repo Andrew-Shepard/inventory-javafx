@@ -22,7 +22,7 @@
    <children>
       <TextField fx:id="valueTextField" GridPane.rowIndex="1" />
       <TextField fx:id="serialTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label text="Value" GridPane.halignment="CENTER" />
+      <Label text="Value ($)" GridPane.halignment="CENTER" />
       <Label text="Serial" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
       <Label text="Name" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
       <Button fx:id="saveItemButton" mnemonicParsing="false" onAction="#SaveItem" text="Save Item [+]" GridPane.halignment="CENTER" GridPane.rowIndex="2" />

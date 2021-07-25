@@ -21,26 +21,37 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageController implements Initializable {
-    @FXML private TableView<Item> tableView;
-    @FXML private TableColumn<Item, SimpleStringProperty> serialColumn;
-    @FXML private TableColumn<Item, BigDecimal> valueColumn;
-    @FXML private TableColumn<Item, SimpleStringProperty> nameColumn;
-    @FXML private TextField filenameTextField;
-    @FXML private TextField searchTextField;
-    @FXML private ComboBox searchComboBox;
-    @FXML private ComboBox filenameComboBox;
+    @FXML
+    private TableView<Item> tableView;
+    @FXML
+    private TableColumn<Item, SimpleStringProperty> serialColumn;
+    @FXML
+    private TableColumn<Item, BigDecimal> valueColumn;
+    @FXML
+    private TableColumn<Item, SimpleStringProperty> nameColumn;
+    @FXML
+    private TextField filenameTextField;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private ComboBox<String> searchComboBox;
+    @FXML
+    private ComboBox<String> filenameComboBox;
 
-    ObservableList<String> searchChoiceList = FXCollections.observableArrayList("Serial","Name");
-    ObservableList<String> filetypeChoiceList = FXCollections.observableArrayList("TSV","JSON","HTML");
+    ObservableList<String> searchChoiceList = FXCollections.observableArrayList("Serial", "Name");
+    ObservableList<String> filetypeChoiceList = FXCollections.observableArrayList("TSV", "JSON", "HTML");
     private User u = new User();
 
-    void initData(User u){
+    void initData(User u) {
         this.u = u;
         tableView.setItems(u.getInventory());
     }
+
     public void nameSortItems(ActionEvent actionEvent) {
         u.sortName();
         tableView.setItems(u.getInventory());
@@ -65,7 +76,7 @@ public class MainPageController implements Initializable {
         ObservableList<Item> item;
         item = tableView.getSelectionModel().getSelectedItems();
         //Set the active item to be accessed in the next scene
-        u.setActive_item_index(u.findItem_index(item.get(0)));
+        u.setActive_item_index(u.getInventory().indexOf(item.get(0)));
         controller.initData(u);
 
         stage.show();
@@ -81,33 +92,49 @@ public class MainPageController implements Initializable {
         tableView.setItems(u.getInventory());
     }
 
-    public void addItem(ActionEvent actionEvent) throws IOException{
-        u.addItem("https://github.com/Andrew-Shepard/",0.0,u.generateRandomSerial());
+    public void addItem(ActionEvent actionEvent) throws IOException {
+        u.addItem("https://github.com/Andrew-Shepard/", 0.0, u.generateRandomSerial());
         tableView.setItems(u.getInventory());
     }
 
     public void load(ActionEvent actionEvent) {
+        u.setFilePath(filenameTextField.getText());
+        ObservableList<Item> loaded_observable_inventory = FXCollections.observableArrayList();
+        //get the inventory from the specified filetype
+        List<Item> loaded_inventory = new ArrayList<>(u.load(filenameComboBox.getValue().toString()));
+        //add each item into the observable list
+        for (Item item : loaded_inventory) {
+            loaded_observable_inventory.add(item);
+        }
+        //set the inventory to the user managed inventory
+        u.setInventory(loaded_observable_inventory);
+        //update table
+        tableView.setItems(u.getInventory());
     }
 
     public void save(ActionEvent actionEvent) {
+        u.setFilePath(filenameTextField.getText());
+        u.save(filenameComboBox.getValue().toString());
     }
+
     public void searchItem(ActionEvent actionEvent) {
-        if (searchComboBox.getValue().equals("Serial")){ // if the combobox is set to serial
+        if (searchComboBox.getValue().equals("Serial")) { // if the combobox is set to serial
             //search by serial and update the table
             u.searchBySerial(searchTextField.getText());
             tableView.setItems(u.getInventory());
-        } else if (searchComboBox.getValue().equals("Name")){ // if the combobox is set to name
+        } else if (searchComboBox.getValue().equals("Name")) { // if the combobox is set to name
             //search by name and update the table
             u.searchByName(searchTextField.getText());
             tableView.setItems(u.getInventory());
         }
     }
+
     @Override
-    public void initialize(URL url, ResourceBundle rb){
+    public void initialize(URL url, ResourceBundle rb) {
         //sets up columns
-        serialColumn.setCellValueFactory(new PropertyValueFactory<Item,SimpleStringProperty>("serial_number"));
-        valueColumn.setCellValueFactory(new PropertyValueFactory<Item,BigDecimal>("value"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<Item,SimpleStringProperty>("name"));
+        serialColumn.setCellValueFactory(new PropertyValueFactory<Item, SimpleStringProperty>("serial_number"));
+        valueColumn.setCellValueFactory(new PropertyValueFactory<Item, BigDecimal>("value"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<Item, SimpleStringProperty>("name"));
         //set up comboboxes
         filenameComboBox.setItems(filetypeChoiceList);
         searchComboBox.setItems(searchChoiceList); //Need to safely initalize this outside of this function

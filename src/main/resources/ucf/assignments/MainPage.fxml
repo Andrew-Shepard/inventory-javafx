@@ -60,7 +60,7 @@
             <content>
                 <TableView fx:id="tableView" prefHeight="274.0" prefWidth="648.0">
                     <columns>
-                        <TableColumn fx:id="valueColumn" prefWidth="116.7999832034111" text="Value" />
+                        <TableColumn fx:id="valueColumn" prefWidth="116.7999832034111" text="Value ($)" />
                         <TableColumn fx:id="serialColumn" prefWidth="152.0000228881836" text="Serial" />
                         <TableColumn fx:id="nameColumn" prefWidth="378.3999328613281" text="Name" />
                     </columns>

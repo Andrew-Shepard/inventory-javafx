@@ -1,17 +1,20 @@
 package ucf.assignments;
 
+import com.google.gson.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.*;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class User {
     ObservableList<Item> inventory = FXCollections.observableArrayList();
-    private String filePath = "resources/Example.json";
+    private String filePath = "resources/Example";
     public int active_item_index = 0;
     //comparators for sort methods
     public static Comparator<Item> nameComparator = new Comparator<Item>() {
@@ -26,8 +29,8 @@ public class User {
         public int compare(Item item_1, Item item_2) {
             Long item_1Value = item_1.getValue().longValue();
             Long item_2Value = item_2.getValue().longValue();
-            //ascending order
-            return item_1Value.compareTo(item_2Value);
+            //ascending order. not sure why but had to switch the order of compare
+            return item_2Value.compareTo(item_1Value);
         }
     };
     public static Comparator<Item> serial_numberComparator = new Comparator<Item>() {
@@ -43,8 +46,16 @@ public class User {
         return inventory;
     }
 
+    public void setInventory(ObservableList<Item> inventory) {
+        this.inventory = inventory;
+    }
+
     public void setActive_item_index(int active_item_index) {
         this.active_item_index = active_item_index;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     //sorting functions using forementioned comparators
@@ -64,32 +75,33 @@ public class User {
         inventory.remove(item);
     }
 
-    public void addItem(String description, Double value, String serial_number) {
-        //lists add new item with description, completion and due date
-        Item added_item = new Item(description, value, serial_number);
+    public void addItem(String name, Double value, String serial_number) {
+        //lists add new item with name, value, and serial
+        Item added_item = new Item(name, value, serial_number);
         inventory.add(added_item);
     }
 
-    public void editItem(Item item, String description, Double value, String serial_number) {
+    public void editItem(Item item, String name, Double value, String serial_number) {
         int item_index = inventory.indexOf(item);
-        Item added_item = new Item(description, value, serial_number);
+        Item added_item = new Item(name, value, serial_number);
         inventory.set(item_index, added_item);
     }
 
     public void searchByName(String search_string) {
         int match_index = 0;
         int item_index = 0;
-        ObservableList<Item> placeholder_inventory = inventory;
-        for (Item item : inventory) {
-            if (item.getName().contains(search_string)) {
+        ObservableList<Item> placeholder_inventory = FXCollections.observableArrayList(inventory);
+
+        for (Item item : placeholder_inventory) {
+            if (item.getSerial_number().contains(search_string)) {
                 //save the index of the match to be removed
-                item_index = inventory.indexOf(item);
+                item_index = placeholder_inventory.indexOf(item);
                 //save the matched item
                 Item match_item = item;
                 //remove the place where the item was found
-                placeholder_inventory.remove(item_index);
+                inventory.remove(item_index);
                 //add the matched item to the beginning of the list
-                placeholder_inventory.add(match_index, match_item);
+                inventory.add(match_index, match_item);
                 //have further matches be added after this match
                 match_index++;
             }
@@ -99,21 +111,23 @@ public class User {
     public void searchBySerial(String search_string) {
         int match_index = 0;
         int item_index = 0;
-        ObservableList<Item> placeholder_inventory = inventory;
-        for (Item item : inventory) {
+        ObservableList<Item> placeholder_inventory = FXCollections.observableArrayList(inventory);
+
+        for (Item item : placeholder_inventory) {
             if (item.getSerial_number().contains(search_string)) {
                 //save the index of the match to be removed
-                item_index = inventory.indexOf(item);
+                item_index = placeholder_inventory.indexOf(item);
                 //save the matched item
                 Item match_item = item;
                 //remove the place where the item was found
-                placeholder_inventory.remove(item_index);
+                inventory.remove(item_index);
                 //add the matched item to the beginning of the list
-                placeholder_inventory.add(match_index, match_item);
+                inventory.add(match_index, match_item);
                 //have further matches be added after this match
                 match_index++;
             }
         }
+
     }
 
     public String generateRandomSerial() {
@@ -133,12 +147,6 @@ public class User {
             generateRandomSerial();
         }
         return saltStr;
-    }
-
-    public int findItem_index(Item item) {
-        //returns the index of an item in the inventory
-        int item_index = inventory.indexOf(item);
-        return item_index;
     }
 
     private boolean checkUniqueSerial(String serial) {
@@ -175,9 +183,218 @@ public class User {
         //check for length and uniqueness in existing list
         if (serialContainsSpecialCharacters == Boolean.FALSE
                 && serial.length() == 10
-                && (checkUniqueSerial(serial) || (serial.equals(getInventory().get(active_item_index).getSerial_number()))) ) {
+                && (checkUniqueSerial(serial) || (serial.equals(getInventory().get(active_item_index).getSerial_number())))) {
             return true;
         }
         return false;
+    }
+
+    public void save(String file_type) {
+        if (file_type.equals("TSV")) {
+            filePath = filePath + ".txt";
+            saveasTSV();
+        }
+        if (file_type.equals("JSON")) {
+            filePath = filePath + ".json";
+            saveasJSON();
+        }
+        if (file_type.equals("HTML")) {
+            filePath = filePath + ".html";
+            saveasHTML();
+        }
+    }
+
+    private void saveasTSV() {
+        List<Item> itemList = new ArrayList<>();
+        //convert to a simpler list
+        for (Item item : inventory) {
+            Item new_item = new Item(
+                    item.getName(),
+                    item.getValue().doubleValue(),
+                    item.getSerial_number()
+            );
+            itemList.add(new_item);
+        }
+        try {
+            //add the items to the json
+            FileWriter fw = new FileWriter(filePath);
+            for (Item item : itemList) {
+                fw.write(item.getName() + "\t" + item.getValue() + "\t" + item.getSerial_number() + "\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveasJSON() {
+        //for each item in inventory
+        Gson gson = new Gson();
+        List<Item> itemList = new ArrayList<>();
+        for (Item item : inventory) {
+            Item new_item = new Item(
+                    item.getName(),
+                    item.getValue().doubleValue(),
+                    item.getSerial_number()
+            );
+            itemList.add(new_item);
+        }
+        try {
+            //add the items to the textfile
+            FileWriter fw = new FileWriter(filePath);
+            fw.write("{\"Inventory\":" + gson.toJson(itemList) + "}");
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveasHTML() {
+        List<Item> itemList = new ArrayList<>();
+        //convert to a simpler list
+        for (Item item : inventory) {
+            Item new_item = new Item(
+                    item.getName(),
+                    item.getValue().doubleValue(),
+                    item.getSerial_number()
+            );
+            itemList.add(new_item);
+        }
+        try {
+            //add the items to the html table
+            FileWriter fw = new FileWriter(filePath);
+            fw.write("<!DOCTYPE html>\n" +
+                    "<html>\n" + "<head>" +
+                    "<style>" + "table, th, td {" + "  border: 1px solid black;" + "}" + "</style>" +
+                    "</head>" +
+                    "<body>\n" +
+                    "\n" +
+                    "<h2>Inventory</h2>\n" +
+                    "\n" +
+                    "<table style=\"width:50%\">\n" +
+                    "  <tr>\n" +
+                    "    <th>Name</th>\n" +
+                    "    <th>Value</th> \n" +
+                    "    <th>Serial Number</th>\n" +
+                    "  </tr>");
+            for (Item item : itemList) {
+                fw.write("<tr><td>"
+                        + item.getName().replaceAll( //replacing illegal xml characters
+                        "&", "&amp;").replaceAll(
+                        "<", "&lt;").replaceAll(
+                        ">", "&gt;").replaceAll(
+                        "\"", "&quot;").replaceAll(
+                        "\'", "&apos;")
+                        + "</td><td>"
+                        + item.getValue() + "</td><td>"
+                        + item.getSerial_number() + "</td></tr>\n");
+            }
+            fw.write("</table>\n" +
+                    "\n" +
+                    "</body>\n" +
+                    "</html>");
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Item> load(String file_type) {
+        List<Item> loaded_inventory = new ArrayList<>();
+        if (file_type.equals("TSV")) {
+            filePath = filePath + ".txt";
+            loaded_inventory = loadTSV();
+        }
+        if (file_type.equals("JSON")) {
+            filePath = filePath + ".json";
+            loaded_inventory = loadJSON();
+        }
+        if (file_type.equals("HTML")) {
+            filePath = filePath + ".html";
+            loaded_inventory = loadHTML();
+        }
+        return loaded_inventory;
+    }
+
+    private List<Item> loadTSV() {
+        //open textfile
+        Path input = Path.of(this.filePath);
+        try {
+            String tsv_text = Files.readString(input);
+            //take the textfile as a list split by new line
+            List<String> split_tsv = new ArrayList<>(Arrays.asList(tsv_text.split("\n")));
+            List<Item> inventory = new ArrayList<>();
+            for (String item : split_tsv) {
+                //split every line by tab and add it to the list of arrays
+                String[] item_properties = item.split("\t");
+                //the index of the properties is known - 0:Name 1:Value 2:Serial Number (See saveastsv())
+                Item new_item = new Item(item_properties[0],
+                        Double.parseDouble(item_properties[1]),
+                        item_properties[2]);
+                //create a new item from the file and add it to the list
+                inventory.add(new_item);
+            }
+            return inventory;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<Item> loadJSON() {
+        try {
+            //open json
+            File input = new File(this.filePath);
+            JsonElement fileElement = JsonParser.parseReader(new FileReader(input));
+            JsonObject fileObject = fileElement.getAsJsonObject();
+            JsonArray jsonArrayofItems = fileObject.get("Inventory").getAsJsonArray();
+            List<Item> items = new ArrayList<>();
+            //for each item in the json
+            for (JsonElement itemElement : jsonArrayofItems) {
+                JsonObject itemJsonObject = itemElement.getAsJsonObject();
+
+                String name = itemJsonObject.get("name").getAsString();
+                Double value = itemJsonObject.get("value").getAsDouble();
+                String serial_number = itemJsonObject.get("serial_number").getAsString();
+                //add each object to lists
+                Item item = new Item(name, value, serial_number);
+                items.add(item);
+            }
+            return items;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<Item> loadHTML() {
+        //open textfile
+        Path input = Path.of(this.filePath);
+        try {
+            String tsv_text = Files.readString(input);
+            //take the textfile as a list split by new table row
+            List<String> split_html = new ArrayList<>(Arrays.asList(tsv_text.split("<tr><td>")));
+            //remove the first entry to isolate table information
+            split_html.remove(0);
+
+            List<Item> inventory = new ArrayList<>();
+            for (String item : split_html) {
+                //split every line by new cell and add it to an array
+                String[] item_properties = item.split("</td><td>");
+                //get rid of the closing row
+
+                item_properties[2] = item_properties[2].replaceAll("<\\/td(.+|\\s)+", "");
+                //the index of the properties is known - 0:Name 1:Value 2:Serial Number (See saveashtml())
+                Item new_item = new Item(item_properties[0],
+                        Double.parseDouble(item_properties[1]),
+                        item_properties[2]);
+                //create a new item from the file and add it to the list
+                inventory.add(new_item);
+            }
+            return inventory;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
