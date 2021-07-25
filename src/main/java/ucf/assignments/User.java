@@ -76,15 +76,20 @@ public class User {
     }
 
     public void addItem(String name, Double value, String serial_number) {
-        //lists add new item with name, value, and serial
+        active_item_index = inventory.size();
         Item added_item = new Item(name, value, serial_number);
         inventory.add(added_item);
+
     }
 
     public void editItem(Item item, String name, Double value, String serial_number) {
+
+
         int item_index = inventory.indexOf(item);
-        Item added_item = new Item(name, value, serial_number);
-        inventory.set(item_index, added_item);
+        if(validateSerial(serial_number)){
+            Item added_item = new Item(name, value, serial_number);
+            inventory.set(item_index, added_item);
+        }
     }
 
     public void searchByName(String search_string) {
@@ -93,7 +98,7 @@ public class User {
         ObservableList<Item> placeholder_inventory = FXCollections.observableArrayList(inventory);
 
         for (Item item : placeholder_inventory) {
-            if (item.getSerial_number().contains(search_string)) {
+            if (item.getName().contains(search_string)) {
                 //save the index of the match to be removed
                 item_index = placeholder_inventory.indexOf(item);
                 //save the matched item
@@ -179,13 +184,18 @@ public class User {
 
     public boolean validateSerial(String serial) {
         //check for special characters
-        Boolean serialContainsSpecialCharacters = Pattern.matches("[^A-Za-z0-9]", serial);
+        Boolean serialContainsSpecialCharacters = Pattern.matches("[A-Za-z0-9]+[^A-Za-z0-9]", serial);
         //check for length and uniqueness in existing list
-        if (serialContainsSpecialCharacters == Boolean.FALSE
-                && serial.length() == 10
-                && (checkUniqueSerial(serial) || (serial.equals(getInventory().get(active_item_index).getSerial_number())))) {
-            return true;
+        if (serialContainsSpecialCharacters == Boolean.FALSE && serial.length() == 10) {
+            if (active_item_index == inventory.size()
+                    && checkUniqueSerial(serial)){
+                return true;
+            }
+            if (checkUniqueSerial(serial) || (serial.equals(getInventory().get(active_item_index).getSerial_number()))){
+                return true;
+            }
         }
+
         return false;
     }
 

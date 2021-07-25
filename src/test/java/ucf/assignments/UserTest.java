@@ -4,14 +4,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
-
+    @Test
+    void inventory_can_store_100_plus_items(){
+        User u = new User();
+        for(int i = 0; i<1000; i++){
+            u.addItem("D", 99.0, "7BC1234567");
+        }
+        assertTrue(u.getInventory().size()>100);
+    }
     @Test
     void sortName() {
         User u = new User();
@@ -119,7 +128,7 @@ class UserTest {
         u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
         //change the values of an item
         Item expected = new Item("actual", 1999.0, "ABC1234567");
-        u.editItem(u.getInventory().get(0), "actual", 1999.0, "ABC1234567");
+        u.editItem(u.getInventory().get(0), "actual", 1999.0, "ABCR234567");
         //assert if the values equal what it was changed to
         assertEquals(1999.0, u.getInventory().get(0).getValue().doubleValue());
     }
@@ -134,10 +143,23 @@ class UserTest {
         u.addItem("FA", 99999.0, "TBC1234567");
         u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
         //change the values of an item
-        Item expected = new Item("actual", 1999.0, "ABC1234567");
-        u.editItem(u.getInventory().get(0), "actual", 1999.0, "ABC1234567");
+        u.editItem(u.getInventory().get(0), "actual", 1999.0, "ABC12345R7");
         //assert if the values equal what it was changed to
-        assertEquals("ABC1234567", u.getInventory().get(0).getSerial_number());
+        assertEquals("ABC12345R7", u.getInventory().get(0).getSerial_number());
+    }
+    @Test
+    void editItem_rejects_duplicate() {
+        User u = new User();
+        //create a sample list to be transformed
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+        //change the values of an item
+        u.editItem(u.getInventory().get(0), "actual", 1999.0, "WBC1234567");
+        //assert if the values equal what it was changed to
+        assertEquals("ZBC1234567", u.getInventory().get(0).getSerial_number());
     }
 
     @Test
@@ -199,22 +221,198 @@ class UserTest {
     @Test
     void validateValue_returns_false_for_letters() {
         User u = new User();
-        String value = "";
+        String value = "abc123!";
         assertFalse(u.validateValue(value));
     }
-
     @Test
-    void validateSerial() {
+    void validateValue_returns_true_for_numbers() {
         User u = new User();
+        String value = "123";
+        assertTrue(u.validateValue(value));
     }
 
     @Test
-    void save() {
+    void validateSerial_returns_false_for_less_than_10_characters() {
         User u = new User();
+        //create a sample list because validateserial checks uniqueness in a list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+
+        String serial = "123";
+        assertFalse(u.validateSerial(serial));
     }
 
     @Test
-    void load() {
+    void validateSerial_returns_false_for_more_than_10_characters() {
         User u = new User();
+        //create a sample list because validateserial checks uniqueness in a list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+
+        String serial = "12345678910";
+        assertFalse(u.validateSerial(serial));
+    }
+
+    @Test
+    void validateSerial_returns_false_for_special_characters() {
+        User u = new User();
+        //create a sample list because validateserial checks uniqueness in a list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+
+        String serial = "112345678!";
+        assertFalse(u.validateSerial(serial));
+    }
+    @Test
+    void validateSerial_returns_false_for_repeated_serials() {
+        User u = new User();
+        //create a sample list because validateserial checks uniqueness in a list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "RBC1234567");
+
+        String serial = u.getInventory().get(0).getSerial_number();
+        assertFalse(u.validateSerial(serial));
+    }
+    @Test
+    void validateSerial_returns_true() {
+        User u = new User();
+        //create a sample list because validateserial checks uniqueness in a list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+
+        String serial = "ZBC1234569";
+        assertTrue(u.validateSerial(serial));
+    }
+
+
+    @Test
+    void save_creates_a_txt() {
+        User u = new User();
+        //create a sample list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+        //set filepath to some testing location
+        String TEST_PATH = "resources/UserTest";
+        u.setFilePath(TEST_PATH);
+        u.save("TSV");
+        //load the file from the testing location
+        //check if the file exists
+        File f = new File(TEST_PATH+".txt");
+        assertTrue(f.exists());;
+    }
+    @Test
+    void save_creates_a_json() {
+        User u = new User();
+        //create a sample list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+        //set filepath to some testing location
+        String TEST_PATH = "resources/UserTest";
+        u.setFilePath(TEST_PATH);
+        u.save("JSON");
+        //load the file from the testing location
+        //check if the file exists
+        File f = new File(TEST_PATH+".json");
+        assertTrue(f.exists());;
+    }
+    @Test
+    void save_creates_a_html() {
+        User u = new User();
+        //create a sample list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+        //set filepath to some testing location
+        String TEST_PATH = "resources/UserTest";
+        u.setFilePath(TEST_PATH);
+        u.save("HTML");
+        //load the file from the testing location
+        //check if the file exists
+        File f = new File(TEST_PATH+".html");
+        assertTrue(f.exists());;
+    }
+
+    @Test
+    void load_loads_saved_HTML() {
+        User u = new User();
+        //create a sample list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+        //set filepath to some testing location
+        String TEST_PATH = "resources/UserTest";
+        u.setFilePath(TEST_PATH);
+        u.save("HTML");
+        //load the file from the testing location
+        //Path must be refreshed because of the design.
+        u.setFilePath(TEST_PATH);
+        List<Item> test = new ArrayList<>(u.load("HTML"));
+        //check if it loaded the expected amount of items
+        assertEquals(5,test.size());
+    }
+    @Test
+    void load_loads_saved_JSON() {
+        User u = new User();
+        //create a sample list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+        //set filepath to some testing location
+        String TEST_PATH = "resources/UserTest";
+        u.setFilePath(TEST_PATH);
+        u.save("JSON");
+        //load the file from the testing location
+        //Path must be refreshed because of the design.
+        u.setFilePath(TEST_PATH);
+        List<Item> test = new ArrayList<>(u.load("JSON"));
+        //check if it loaded the expected amount of items
+        assertEquals(5,test.size());
+    }
+    @Test
+    void load_loads_saved_TSV() {
+        User u = new User();
+        //create a sample list
+        u.addItem("D", 99.0, "ZBC1234567");
+        u.addItem("CA", 999.0, "WBC1234567");
+        u.addItem("AA", 9999.0, "XBC1234567");
+        u.addItem("FA", 99999.0, "TBC1234567");
+        u.addItem("EA sports, get in the game", 9999999.0, "ABC1234567");
+        //set filepath to some testing location
+        String TEST_PATH = "resources/UserTest";
+        u.setFilePath(TEST_PATH);
+        u.save("TSV");
+        //load the file from the testing location
+        //Path must be refreshed because of the design.
+        u.setFilePath(TEST_PATH);
+        List<Item> test = new ArrayList<>(u.load("TSV"));
+        //check if it loaded the expected amount of items
+        assertEquals(5,test.size());
     }
 }
