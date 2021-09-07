@@ -1,4 +1,3 @@
-# shepard-8812-a5
 ## You can add a new item
 ![](https://i.imgur.com/e1pVsgL.gif)
 ## Complete with input validation!!
